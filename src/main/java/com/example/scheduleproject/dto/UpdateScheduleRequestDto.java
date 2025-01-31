@@ -3,10 +3,9 @@ package com.example.scheduleproject.dto;
 import lombok.Getter;
 
 @Getter
-public class ScheduleRequestDto {
+public class UpdateScheduleRequestDto {
 
     private String todo;
-    private String name;
     private String pwd;
 
 }

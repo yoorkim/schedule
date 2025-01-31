@@ -7,18 +7,16 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class Schedule {
+public class Author {
 
     private Long id;
-    private String todo;
-    private String pwd;
-    private Long authorId;
+    private String name;
+    private String email;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public Schedule(String todo, String pwd, Long authorId) {
-        this.todo = todo;
-        this.pwd = pwd;
-        this.authorId = authorId;
+    public Author(String name, String email) {
+        this.name = name;
+        this.email = email;
     }
 }

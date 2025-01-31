@@ -1,9 +1,19 @@
 CREATE TABLE schedule
 (
     id          BIGINT          AUTO_INCREMENT PRIMARY KEY,
-    todo        VARCHAR(100),
-    name        VARCHAR(10)     NOT NULL,
-    pwd         VARCHAR(20)     NOT NULL,
+    todo        VARCHAR(200)    NOT NULL,
+    pwd         VARCHAR(100)     NOT NULL,
+    author_id   BIGINT          NOT NULL,
+    created_at  DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES author(id) ON DELETE CASCADE
+);
+
+CREATE TABLE author
+(
+    id          BIGINT          AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(50)     NOT NULL,
+    email       VARCHAR(100)     UNIQUE NOT NULL ,
     created_at  DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at  DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
