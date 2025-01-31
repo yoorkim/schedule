@@ -1,0 +1,9 @@
+CREATE TABLE schedule
+(
+    id          BIGINT          AUTO_INCREMENT PRIMARY KEY,
+    todo        VARCHAR(100),
+    name        VARCHAR(10)     NOT NULL,
+    pwd         VARCHAR(20)     NOT NULL,
+    created_at  DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
