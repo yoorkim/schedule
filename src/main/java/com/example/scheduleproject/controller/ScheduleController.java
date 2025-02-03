@@ -28,7 +28,6 @@ public class ScheduleController {
 
     @PostMapping
     public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody CreateScheduleRequestDto requestDto) {
-
         return new ResponseEntity<>(scheduleService.saveSchedule(requestDto), HttpStatus.CREATED);
     }
 
@@ -52,7 +51,7 @@ public class ScheduleController {
     @GetMapping("/paged")
     public ResponseEntity<Map<String, Object>> findAllSchedulesPaged(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size ) {
+            @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return new ResponseEntity<>(scheduleService.findAllSchedulesPaged(pageable), HttpStatus.OK);
     }
@@ -60,8 +59,7 @@ public class ScheduleController {
     @PutMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> updateSchedule(
             @PathVariable Long id,
-            @RequestBody UpdateScheduleRequestDto requestDto
-    ) {
+            @RequestBody UpdateScheduleRequestDto requestDto) {
         return new ResponseEntity<>(scheduleService.updateSchedule(id, requestDto), HttpStatus.OK);
     }
 

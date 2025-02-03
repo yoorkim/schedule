@@ -60,7 +60,7 @@ public class AuthorServiceImpl implements AuthorService{
 
         int updatedRow = authorRepository.updateAuthor(id, requestDto.getName(), requestDto.getEmail());
         if (updatedRow == 0) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Check your id.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid author id.");
         }
 
         return new AuthorResponseDto(authorRepository.findAuthorByIdOrElseThrow(id));
@@ -70,7 +70,7 @@ public class AuthorServiceImpl implements AuthorService{
     public void deleteAuthor(Long id) {
         int deletedRow = authorRepository.deleteAuthor(id);
         if (deletedRow == 0) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Check your id.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid author id.");
         }
     }
 }

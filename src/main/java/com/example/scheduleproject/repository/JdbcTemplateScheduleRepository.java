@@ -95,11 +95,26 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{
 
     @Override
     public int updateSchedule(Long id, String todo, String pwd) {
+        List<String> findPwdList = jdbcTemplate.query("SELECT pwd FROM schedule WHERE id = ?", new Object[]{id}, (rs, rowNum) -> rs.getString("pwd"));
+        if (findPwdList.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid schedule id.");
+        }
+        if (!pwd.equals(findPwdList.get(0))) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Check your password.");
+        }
+
         return jdbcTemplate.update("UPDATE schedule SET todo = ? WHERE pwd = ? AND id = ?", todo, pwd, id);
     }
 
     @Override
     public int deleteSchedule(Long id, String pwd) {
+        List<String> findPwdList = jdbcTemplate.query("SELECT pwd FROM schedule WHERE id = ?", new Object[]{id}, (rs, rowNum) -> rs.getString("pwd"));
+        if (findPwdList.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid schedule id.");
+        }
+        if (!pwd.equals(findPwdList.get(0))) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Check your password.");
+        }
         return jdbcTemplate.update("DELETE FROM schedule WHERE pwd = ? AND id = ?", pwd, id);
     }
 
