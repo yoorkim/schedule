@@ -3,6 +3,7 @@ package com.example.scheduleproject.controller;
 import com.example.scheduleproject.dto.AuthorRequestDto;
 import com.example.scheduleproject.dto.AuthorResponseDto;
 import com.example.scheduleproject.service.AuthorService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class AuthorController {
     }
 
     @PostMapping
-    public ResponseEntity<AuthorResponseDto> createAuthor(@RequestBody AuthorRequestDto requestDto) {
+    public ResponseEntity<AuthorResponseDto> createAuthor(@RequestBody @Valid AuthorRequestDto requestDto) {
         Long id = authorService.getOrCreateAuthor(requestDto.getName(), requestDto.getEmail());
         return new ResponseEntity<>(authorService.findAuthorById(id), HttpStatus.CREATED);
     }
@@ -38,7 +39,7 @@ public class AuthorController {
     @PutMapping("/{id}")
     public ResponseEntity<AuthorResponseDto> updateAuthor(
             @PathVariable Long id,
-            @RequestBody AuthorRequestDto requestDto
+            @RequestBody @Valid AuthorRequestDto requestDto
     ) {
         return new ResponseEntity<>(authorService.updateAuthor(id, requestDto), HttpStatus.OK);
     }

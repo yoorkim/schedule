@@ -4,6 +4,8 @@ import com.example.scheduleproject.dto.CreateScheduleRequestDto;
 import com.example.scheduleproject.dto.ScheduleResponseDto;
 import com.example.scheduleproject.dto.UpdateScheduleRequestDto;
 import com.example.scheduleproject.service.ScheduleService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -27,7 +29,7 @@ public class ScheduleController {
     }
 
     @PostMapping
-    public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody CreateScheduleRequestDto requestDto) {
+    public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody @Valid CreateScheduleRequestDto requestDto) {
         return new ResponseEntity<>(scheduleService.saveSchedule(requestDto), HttpStatus.CREATED);
     }
 
@@ -59,12 +61,12 @@ public class ScheduleController {
     @PutMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> updateSchedule(
             @PathVariable Long id,
-            @RequestBody UpdateScheduleRequestDto requestDto) {
+            @RequestBody @Valid UpdateScheduleRequestDto requestDto) {
         return new ResponseEntity<>(scheduleService.updateSchedule(id, requestDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSchedule(@PathVariable Long id, @RequestBody String pwd) {
+    public ResponseEntity<Void> deleteSchedule(@PathVariable Long id, @RequestBody @NotNull String pwd) {
         scheduleService.deleteSchedule(id, pwd);
         return new ResponseEntity<>(HttpStatus.OK);
     }
