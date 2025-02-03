@@ -2,6 +2,8 @@ package com.example.scheduleproject.repository;
 
 import com.example.scheduleproject.dto.ScheduleResponseDto;
 import com.example.scheduleproject.entity.Schedule;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
+import org.springframework.data.domain.Pageable;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -67,6 +70,21 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{
     @Override
     public List<ScheduleResponseDto> findAllSchedules() {
         return jdbcTemplate.query("SELECT s.id, s.todo, a.name, a.id AS author_id, s.created_at, s.updated_at FROM schedule s JOIN author a ON s.author_id = a.id", scheduleMapper());
+    }
+
+    @Override
+    public Page<ScheduleResponseDto> findAllSchedulesPaged(Pageable pageable) {
+        String sql = """
+            SELECT s.id, s.todo, a.name, a.id AS author_id, s.created_at, s.updated_at
+            FROM schedule s
+            JOIN author a ON s.author_id = a.id
+            ORDER BY s.created_at DESC
+            LIMIT ? OFFSET ?
+        """;
+        List<ScheduleResponseDto> schedules = jdbcTemplate.query(sql, scheduleMapper(), pageable.getPageSize(), pageable.getOffset());
+        Long totalElements = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM schedule", Long.class);
+
+        return new PageImpl<>(schedules, pageable, totalElements);
     }
 
     @Override

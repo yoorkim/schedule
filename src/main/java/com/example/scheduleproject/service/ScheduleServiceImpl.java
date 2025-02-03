@@ -5,13 +5,17 @@ import com.example.scheduleproject.dto.UpdateScheduleRequestDto;
 import com.example.scheduleproject.dto.ScheduleResponseDto;
 import com.example.scheduleproject.entity.Schedule;
 import com.example.scheduleproject.repository.ScheduleRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
@@ -49,6 +53,19 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<ScheduleResponseDto> findAllSchedules() {
         return scheduleRepository.findAllSchedules();
+    }
+
+    @Override
+    public Map<String, Object> findAllSchedulesPaged(Pageable pageable) {
+        Page<ScheduleResponseDto> schedules = scheduleRepository.findAllSchedulesPaged(pageable);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", schedules.getContent());
+        response.put("totalPages", schedules.getTotalPages());
+        response.put("totalElements", schedules.getTotalElements());
+        response.put("currentPage", schedules.getNumber());
+
+        return response;
     }
 
     @Override
