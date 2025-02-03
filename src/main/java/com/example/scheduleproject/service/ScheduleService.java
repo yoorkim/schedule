@@ -1,6 +1,5 @@
 package com.example.scheduleproject.service;
 
-import com.example.scheduleproject.dto.AuthorRequestDto;
 import com.example.scheduleproject.dto.CreateScheduleRequestDto;
 import com.example.scheduleproject.dto.ScheduleResponseDto;
 import com.example.scheduleproject.dto.UpdateScheduleRequestDto;

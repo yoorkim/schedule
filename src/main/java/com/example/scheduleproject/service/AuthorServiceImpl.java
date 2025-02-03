@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,7 +28,7 @@ public class AuthorServiceImpl implements AuthorService{
 
         if (authorId == null) {
             Author author = new Author(name, email);  // 새로운 작성자 생성
-            authorId = authorRepository.saveAuthor(author).longValue();
+            authorId = authorRepository.saveAuthor(author).getId();
         }
 
         return authorId;
@@ -35,12 +36,19 @@ public class AuthorServiceImpl implements AuthorService{
 
     @Override
     public List<AuthorResponseDto> findAllAuthors() {
-        return authorRepository.findAllAuthors();
+        List<Author> authors = authorRepository.findAllAuthors();
+        List<AuthorResponseDto> dtoList = new ArrayList<>();
+
+        for (Author author : authors) {
+            dtoList.add(new AuthorResponseDto(author));
+        }
+
+        return dtoList;
     }
 
     @Override
     public AuthorResponseDto findAuthorById(Long id) {
-        return authorRepository.findAuthorByIdOrElseThrow(id);
+        return new AuthorResponseDto(authorRepository.findAuthorByIdOrElseThrow(id));
     }
 
     @Override
@@ -55,7 +63,7 @@ public class AuthorServiceImpl implements AuthorService{
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Check your id.");
         }
 
-        return authorRepository.findAuthorByIdOrElseThrow(id);
+        return new AuthorResponseDto(authorRepository.findAuthorByIdOrElseThrow(id));
     }
 
     @Override

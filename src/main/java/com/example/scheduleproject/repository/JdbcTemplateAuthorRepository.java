@@ -1,6 +1,5 @@
 package com.example.scheduleproject.repository;
 
-import com.example.scheduleproject.dto.AuthorResponseDto;
 import com.example.scheduleproject.entity.Author;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -37,7 +36,7 @@ public class JdbcTemplateAuthorRepository implements AuthorRepository{
     }
 
     @Override
-    public Number saveAuthor(Author author) {
+    public Author saveAuthor(Author author) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
         jdbcInsert.withTableName("author").usingGeneratedKeyColumns("id");
 
@@ -48,17 +47,19 @@ public class JdbcTemplateAuthorRepository implements AuthorRepository{
         parameters.put("name", author.getName());
         parameters.put("email", author.getEmail());
 
-        return jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
+        Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
+        author.setId(key.longValue());
+        return author;
     }
 
     @Override
-    public List<AuthorResponseDto> findAllAuthors() {
+    public List<Author> findAllAuthors() {
         return jdbcTemplate.query("SELECT * FROM author", authorMapper());
     }
 
     @Override
-    public AuthorResponseDto findAuthorByIdOrElseThrow(Long id) {
-        List<AuthorResponseDto> result = jdbcTemplate.query("SELECT * FROM author WHERE id = ?", authorMapper(), id);
+    public Author findAuthorByIdOrElseThrow(Long id) {
+        List<Author> result = jdbcTemplate.query("SELECT * FROM author WHERE id = ?", authorMapper(), id);
         return result.stream().findAny().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id));
     }
 
@@ -72,11 +73,11 @@ public class JdbcTemplateAuthorRepository implements AuthorRepository{
         return jdbcTemplate.update("DELETE FROM author WHERE id = ?", id);
     }
 
-    private RowMapper<AuthorResponseDto> authorMapper() {
-        return new RowMapper<AuthorResponseDto>() {
+    private RowMapper<Author> authorMapper() {
+        return new RowMapper<Author>() {
             @Override
-            public AuthorResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new AuthorResponseDto(
+            public Author mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new Author(
                         rs.getLong("id"),
                         rs.getString("name"),
                         rs.getString("email"),

@@ -22,12 +22,12 @@ public class AuthorController {
     @PostMapping
     public ResponseEntity<AuthorResponseDto> createAuthor(@RequestBody AuthorRequestDto requestDto) {
         Long id = authorService.getOrCreateAuthor(requestDto.getName(), requestDto.getEmail());
-        return new ResponseEntity<>(authorService.findAuthorById(id), HttpStatus.OK);
+        return new ResponseEntity<>(authorService.findAuthorById(id), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public List<AuthorResponseDto> findAllAuthors() {
-        return authorService.findAllAuthors();
+    public ResponseEntity<List<AuthorResponseDto>> findAllAuthors() {
+        return new ResponseEntity<>(authorService.findAllAuthors(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
